@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -100,6 +99,35 @@ const floors = [
     mapImage: "/floor_plans/floor_17.svg",
     rooms: [],
   },
+  {
+    id: 5,
+    name: "18th Floor",
+    nameID: "Lantai 18",
+    mapImage: "/floor_plans/floor_18.svg",
+    rooms: [],
+  },
+  {
+    id: 6,
+    name:"19th Floor",
+    nameID: "Lantai 19",
+    mapImage: "/floor_plans/floor_19.svg",
+    rooms: [],
+  },
+  {
+    id: 7,
+    name: "20th Floor",
+    nameID: "Lantai 20",
+    mapImage: "/floor_plans/floor_20.svg",
+    rooms: [],
+  },
+  {
+    id: 8,
+    name: "21st Floor",
+    nameID: "Lantai 21",
+    mapImage: "/floor_plans/floor_21.svg",
+    rooms: [],
+  },
+
 ];
 
 export default function Home() {
@@ -111,6 +139,7 @@ export default function Home() {
   const [zoom, setZoom] = useState(1);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const t = translations[language];
   const currentFloor = floors[selectedFloor];
@@ -122,26 +151,72 @@ export default function Home() {
     setZoom(1);
   }
 
-  function sendMessage(event) {
+  async function sendMessage(event) {
     event.preventDefault();
 
-    if (!message.trim()) return;
+    if (!message.trim() || isLoading) return;
 
     const userMessage = message.trim();
+
+    const conversation = [
+      ...messages.map((item) => ({
+        role: item.sender === "user" ? "user" : "assistant",
+        content: item.text,
+      })),
+      {
+        role: "user",
+        content: userMessage,
+      },
+    ];
 
     setMessages((previous) => [
       ...previous,
       { sender: "user", text: userMessage },
-      {
-        sender: "bot",
-        text:
-          language === "en"
-            ? "I'm currently a prototype assistant. AI campus assistance will be connected later."
-            : "Saat ini saya masih berupa prototipe. Fitur bantuan AI kampus akan dihubungkan nanti.",
-      },
     ]);
-
+        
     setMessage("");
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messages: conversation,
+          language,
+        }),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+
+  throw new Error(data.error || "AI request failed");
+  
+}
+
+      setMessages((previous) => [
+        ...previous,
+        { sender: "bot", text:data.reply},
+      ]);
+    } catch (error) {
+      console.error("Chat error:", error);
+
+      setMessages((previous) => [
+        ...previous,
+        {
+          sender: "bot",
+          text:
+          language === "id"
+          ? "Maaf, saya tidak dapat terhubung ke AI. Silahkan coba lagi."
+          : "Sorry, I couldn't connect to the AI. Please try again.",
+
+        },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   function zoomIn() {
@@ -287,7 +362,7 @@ export default function Home() {
                 {currentFloor.mapImage ? (
                   <FloorMap
                  src={currentFloor.mapImage}
-                 onRoomClick={(handleMapRoomClick) => console.log("clicked:", roomNumber)}
+                 onRoomClick={handleMapRoomClick}
                   />
                 ) : (
                   currentFloor.rooms.map((room, index) => (
@@ -390,6 +465,11 @@ export default function Home() {
                 {item.text}
               </div>
             ))}
+            {isLoading && (
+              <div className="chat-message bot-message">
+                {language === "id" ? "Sedang mengetik..." : "Typing..."}
+                </div>
+            )}
           </div>
 
           <form className="chat-input-area" onSubmit={sendMessage}>
@@ -397,12 +477,20 @@ export default function Home() {
               type="text"
               className="form-control"
               value={message}
-              onChange={(event) => setMessage(event.target.value)}
+              onChange={(e) => setMessage(e.target.value)}
               placeholder={t.placeholder}
             />
 
-            <button type="submit" className="btn btn-danger">
-              {t.send}
+            <button 
+            type="submit" 
+            className="btn btn-danger"
+            disabled={isLoading || !message.trim()}
+            >
+              {isLoading
+              ? (language === "id" ? "Memproses..." : "Thinking...")
+              : t.send}
+              
+          
             </button>
           </form>
         </section>
