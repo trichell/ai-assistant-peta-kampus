@@ -67,42 +67,38 @@ const translations = {
 const floors = [
   {
     id: 0,
-    name: "18th Floor",
-    nameID: "Lantai 18",
-    rooms: [
-      { id: "classroom", number: "1801", x: 8, y: 8, width: 30, height: 34 },
-      { id: "classroom", number: "1802", x: 48, y: 13, width: 25, height: 29 },
-      { id: "faculty", number: "F1801", x: 9, y: 55, width: 28, height: 31 },
-      { id: "laboratory", number: "LAB 18", x: 53, y: 56, width: 29, height: 30 },
-      { id: "elevator", number: "E1", x: 84, y: 8, width: 10, height: 22 },
-    ],
-  },
+    name: "10th Floor",
+    nameID: "Lantai 10",
+    mapImage: "/floor_plans/floor_10.svg",
+    rooms: []
+      },
   {
     id: 1,
-    name: "19th Floor",
-    nameID: "Lantai 19",
-    rooms: [
-      { id: "classroom", number: "1901", x: 8, y: 8, width: 30, height: 34 },
-      { id: "classroom", number: "1902", x: 48, y: 13, width: 25, height: 29 },
-      { id: "laboratory", number: "LAB 19", x: 9, y: 55, width: 28, height: 31 },
-      { id: "faculty", number: "F1901", x: 53, y: 56, width: 29, height: 30 },
-      { id: "elevator", number: "E1", x: 84, y: 8, width: 10, height: 22 },
-    ],
+    name: "12th Floor",
+    nameID: "Lantai 12",
+    mapImage: "/floor_plans/floor_12.svg",
+    rooms: []
   },
   {
     id: 2,
-    name: "20th Floor",
-    nameID: "Lantai 20",
-    rooms: [
-      
-    ],
+    name: "15th floor",
+    nameID: "Lantai 15",
+    mapImage: "/floor_plans/floor_15.svg",
+    rooms: [],
   },
   {
     id: 3,
-    name: "21st floor",
-    nameID: "Lantai 21",
-    mapImage:"/floor_plans/floor_21.svg",
+    name: "16th floor",
+    nameID: "Lantai 16",
+    mapImage:"/floor_plans/floor_16.svg",
     rooms: []
+  },
+  {
+    id: 4,
+    name: "17th Floor",
+    nameID: "Lantai 17",
+    mapImage: "/floor_plans/floor_17.svg",
+    rooms: [],
   },
 ];
 
