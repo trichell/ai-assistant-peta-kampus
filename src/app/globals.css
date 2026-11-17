@@ -27,7 +27,6 @@ button {
   overflow: hidden;
 }
 
-/* NAVBAR */
 
 .campus-navbar {
   height: 72px;
@@ -62,12 +61,14 @@ button {
 
 .dashboard > .row {
   height: 100%;
+  flex-wrap: nowrap;
 }
 
 /* SIDEBAR */
 
 .sidebar {
   width: 270px;
+  min-height: 0;
   min-width: 270px;
   background: #f7f7f7;
   border-right: 2px solid #dedede;
@@ -114,7 +115,6 @@ button {
   font-weight: 600;
 }
 
-/* SIDEBAR CHATBOT */
 
 .sidebar-chatbot {
   width: 100%;
@@ -165,7 +165,6 @@ button {
   font-size: 20px;
 }
 
-/* MAIN CONTENT */
 
 .main-content {
   min-width: 0;
@@ -187,7 +186,6 @@ button {
   font-size: 13px;
 }
 
-/* ZOOM BUTTONS */
 
 .zoom-controls {
   gap: 5px;
@@ -201,7 +199,6 @@ button {
   padding: 0;
 }
 
-/* FLOOR PLAN */
 
 .map-viewport {
   flex: 1;
@@ -211,20 +208,15 @@ button {
   padding: 20px 30px;
 }
 
-.floor-plan {
+.floor_plan {
   position: relative;
   width: 100%;
-  min-width: 650px;
   height: 100%;
   min-height: 480px;
   transform-origin: top left;
   transition: transform 0.2s ease;
 }
 
-.floor_map{
-  width: 100%;
-  height: 100%;
-}
 
 .floor_map {
   width: 100%;
@@ -236,25 +228,30 @@ button {
 }
 
 .floor_map svg {
-  width: 70%;
-  max-width: 400px;
-  height: auto;
-  max-height: 85%;
   display: block;
-  color-scheme: light !important;
-
+  width: 100%;
+  height: auto;
+  max-width: 850px;
+  max-height: 100%;
   object-fit: contain;
+    color-scheme: light !important;
+
 }
+
+.floor_map .room > g:first-child> rect {
+  pointer-events: all;
+  cursor: pointer;
+}
+
+.floor_map .room:hover > g:first-child > rect 
+ 
+
 
 .floor_map .room{
   cursor: pointer;
 }
 
-.floor_map .room:hover {
-  opacity: 0.7;
-}
 
-/* ROOM BUTTONS */
 
 .map-room {
   position: absolute;
@@ -289,33 +286,12 @@ button {
   font-size: 24px;
 }
 
-/* ROOM COLORS */
 
-.room-classroom {
-  background: #fff0f0;
-  border-color: #e6b8bb;
-  color: #9d2630;
-}
 
-.room-laboratory {
-  background: #eaf1ff;
-  border-color: #b7c9ed;
-  color: #315b9b;
-}
 
-.room-faculty {
-  background: #f1eaff;
-  border-color: #d0bce9;
-  color: #714b9c;
-}
 
-.room-elevator {
-  background: #e8f5ed;
-  border-color: #b8ddc5;
-  color: #32764b;
-}
 
-/* ROOM MODAL */
+
 
 .room-modal-overlay {
   position: fixed;
@@ -338,7 +314,6 @@ button {
   color: #660033;
 }
 
-/* CHATBOT */
 
 .chat-panel {
   position: fixed;
