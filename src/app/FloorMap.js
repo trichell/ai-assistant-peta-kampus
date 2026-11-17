@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -7,15 +8,24 @@ export default function FloorMap({ src, onRoomClick }) {
   const [markup, setMarkup] = useState("");
 
   useEffect(() => {
+    let cancelled = false;
+
     fetch(src)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to load floor plan");
         }
+
         return response.text();
       })
-      .then(setMarkup)
+      .then((data) => {
+        if (!cancelled) setMarkup(data);
+      })
       .catch((error) => console.error(error));
+
+    return () => {
+      cancelled = true;
+    };
   }, [src]);
 
   useEffect(() => {
@@ -24,35 +34,49 @@ export default function FloorMap({ src, onRoomClick }) {
     const svg = ref.current.querySelector("svg");
     if (!svg) return;
 
-    const roomPattern = /^(?:[A-Z]{1,3}\s*-?\s*)\d{3,5}$/i;
+    const floorMatch = src.match(/floor_(\d+)\.svg/i);
+    const floorNumber = floorMatch ? Number(floorMatch[1]) : null;
 
-    svg.querySelectorAll("g[data-cell-id]").forEach((group) => {
-      const label = group.querySelector("foreignObject");
+    const roomPattern = /^[A-Z]{1,3}-?\d{3,5}$/i;
 
-      if (!label) return;
+    const romanPattern =
+      /^(I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII)$/i;
+
+    // Clear previous room assignments.
+    svg.querySelectorAll(".room[data-room]").forEach((group) => {
+      group.classList.remove("room");
+      delete group.dataset.room;
+    });
+
+    // Find each label and associate it with its nearest cell group.
+    svg.querySelectorAll("foreignObject").forEach((label) => {
+      const group = label.closest("g[data-cell-id]");
+
+      if (!group) return;
 
       const roomNumber = label.textContent
         .replace(/\s+/g, "")
-        .trim();
+        .trim()
+        .toUpperCase();
 
-      if (!roomPattern.test(roomNumber)) return;
+      const isNormalRoom = roomPattern.test(roomNumber);
+      const isFloorTenRoman =
+        floorNumber === 10 && romanPattern.test(roomNumber);
 
-      const roomShape = group.querySelector("rect");
-
-      if (!roomShape) return;
+      if (!isNormalRoom && !isFloorTenRoman) return;
 
       group.classList.add("room");
       group.dataset.room = roomNumber;
 
-      roomShape.style.pointerEvents = "all";
-      roomShape.style.cursor = "pointer";
+      group.style.cursor = "pointer";
     });
-  }, [markup]);
+  }, [markup, src]);
 
   const handleClick = (event) => {
-    const room = event.target.closest(".room");
+    const room = event.target.closest("g.room[data-room]");
 
     if (room && onRoomClick) {
+      console.log("Clicked SVG room:", room.dataset.room);
       onRoomClick(room.dataset.room);
     }
   };

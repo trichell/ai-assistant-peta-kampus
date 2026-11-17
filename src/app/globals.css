@@ -1,4 +1,3 @@
-
 * {
   box-sizing: border-box;
 }
@@ -26,7 +25,6 @@ button {
   flex-direction: column;
   overflow: hidden;
 }
-
 
 .campus-navbar {
   height: 72px;
@@ -64,7 +62,6 @@ button {
   flex-wrap: nowrap;
 }
 
-/* SIDEBAR */
 
 .sidebar {
   width: 270px;
@@ -81,6 +78,52 @@ button {
 
 .sidebar-top {
   position: relative;
+}
+
+.sidebar {
+  transition: width 0.25s ease, min-width 0.25s ease;
+}
+
+.sidebar.collapsed {
+  width: 0;
+  min-width: 0;
+  border-right: none;
+  overflow: hidden;
+}
+
+.main-content {
+  position: relative;
+}
+
+.sidebar-toggle {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: #ffffff;
+  color: #660033;
+  font-size: 16px;
+  font-weight: 700;
+  border: 1px solid #dedede;
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.08);
+  z-index: 6;
+}
+
+.sidebar-toggle:hover {
+  background: #fff0f0;
+}
+
+/* Chat panel follows the sidebar */
+.chat-panel.sidebar-closed {
+  left: 20px;
 }
 
 .floor-button {
@@ -115,7 +158,6 @@ button {
   font-weight: 600;
 }
 
-
 .sidebar-chatbot {
   width: 100%;
   min-height: 115px;
@@ -144,6 +186,13 @@ button {
   font-size: 24px;
 }
 
+.chatbot-icon img {
+  width: 35px;
+  height: 35px;
+  object-fit: contain;
+  display: block;
+}
+
 .chatbot-text {
   display: flex;
   flex-direction: column;
@@ -165,6 +214,7 @@ button {
   font-size: 20px;
 }
 
+/* MAIN CONTENT */
 
 .main-content {
   min-width: 0;
@@ -181,11 +231,10 @@ button {
 
 .floor-indicator {
   background: #fff0f0;
-  color: #bd252e;
+  color: #660033;
   padding: 10px 17px;
   font-size: 13px;
 }
-
 
 .zoom-controls {
   gap: 5px;
@@ -198,7 +247,6 @@ button {
   line-height: 1;
   padding: 0;
 }
-
 
 .map-viewport {
   flex: 1;
@@ -217,7 +265,6 @@ button {
   transition: transform 0.2s ease;
 }
 
-
 .floor_map {
   width: 100%;
   height: 100%;
@@ -234,24 +281,21 @@ button {
   max-width: 850px;
   max-height: 100%;
   object-fit: contain;
-    color-scheme: light !important;
-
+  color-scheme: light !important;
 }
 
-.floor_map .room > g:first-child> rect {
+.floor_map .room {
+  cursor: pointer;
+}
+
+.floor_map .room > g:first-child > rect {
   pointer-events: all;
   cursor: pointer;
 }
 
-.floor_map .room:hover > g:first-child > rect 
- 
-
-
-.floor_map .room{
-  cursor: pointer;
+.floor_map .room:hover > g:first-child > rect {
+  filter: brightness(0.95);
 }
-
-
 
 .map-room {
   position: absolute;
@@ -286,12 +330,7 @@ button {
   font-size: 24px;
 }
 
-
-
-
-
-
-
+/* ROOM INFORMATION POPUP */
 
 .room-modal-overlay {
   position: fixed;
@@ -306,27 +345,140 @@ button {
 
 .room-dialog {
   width: 100%;
-  max-width: 420px;
-  margin: 0;
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+.room-dialog .modal-content {
+  background-color: #ffffff;
+  color: #2b2b2b;
+  border: none;
+  border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  animation: roomPopIn 0.18s ease-out;
+}
+
+.room-dialog .modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 22px;
+  background-color: #ffffff;
+  border-bottom: 3px solid #660033;
 }
 
 .room-dialog .modal-title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
   color: #660033;
 }
 
+.room-dialog .btn-close {
+  flex-shrink: 0;
+  padding: 8px;
+  opacity: 0.6;
+}
+
+.room-dialog .btn-close:hover {
+  opacity: 1;
+}
+
+.room-dialog .modal-body {
+  padding: 20px 22px;
+  background-color: #ffffff;
+  max-height: 60vh;
+  overflow-y: auto;
+  line-height: 1.55;
+  font-size: 0.95rem;
+}
+
+.room-dialog .modal-body p {
+  margin: 0 0 14px;
+}
+
+.room-dialog .modal-body p:last-child {
+  margin-bottom: 0;
+}
+
+.room-dialog .modal-body strong {
+  color: #660033;
+  font-weight: 600;
+}
+
+.room-dialog .modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 22px;
+  background-color: #fafafa;
+  border-top: 1px solid #eeeeee;
+}
+
+.room-dialog .modal-footer .btn {
+  min-width: 90px;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  background-color: #660033;
+  border-color: #660033;
+  color: #ffffff;
+}
+
+.room-dialog .modal-footer .btn:hover {
+  background-color: #5A1025;
+  border-color: #5A1025;
+}
+
+@keyframes roomPopIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* AI CHAT PANEL */
 
 .chat-panel {
   position: fixed;
-  left: 290px;
-  bottom: 20px;
-  width: 360px;
-  height: 440px;
-  background: white;
-  border-radius: 12px;
+  left: 290px;          
+  bottom: 25px;
+  right: auto;
+  width: 380px;
+  height: 400px;
+
   display: flex;
   flex-direction: column;
+
+  background: #ffffff !important;
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+
+  border: 1px solid #dddddd;
+  border-radius: 12px;
   overflow: hidden;
-  z-index: 90;
+
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.chat-panel .chat-header,
+.chat-panel .chat-messages,
+.chat-panel .chat-input-area {
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.chat-panel .chat-messages,
+.chat-panel .chat-input-area {
+  background-color: #ffffff !important;
 }
 
 .chat-header {
@@ -378,20 +530,70 @@ button {
   min-width: 0;
 }
 
-.chatbot-icon img {
-  width: 35px;
-  height: 35px;
-  object-fit: contain;
-  display: block;
+.chat-send-button,
+.chat-send-button:focus {
+  background-color: #660033 !important;
+  border-color: #660033 !important;
+  color: #ffffff !important;
 }
 
-.chatbot-icon {
+.chat-send-button:hover {
+  background-color: #5A1025 !important;
+  border-color: #5A1025 !important;
+  color: #ffffff !important;
+}
+
+.chat-send-button:disabled {
+  background-color: #8e4055 !important;
+  border-color: #8e4055 !important;
+  color: #ffffff !important;
+  opacity: 1;
+}
+
+/* LEGACY POPUP (kept in case it is still used somewhere) */
+
+.room-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  z-index: 2000;
 }
 
-/* RESPONSIVE */
+.room-popup {
+  position: relative;
+  background: white;
+  width: 90%;
+  max-width: 450px;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+}
+
+.room-popup h3 {
+  color: #5A1025;
+  margin-bottom: 20px;
+}
+
+.room-popup p {
+  margin-bottom: 15px;
+  color: #444;
+}
+
+.room-popup-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  border: none;
+  background: transparent;
+  font-size: 28px;
+  cursor: pointer;
+  color: #777;
+}
+
+/* SMALL SCREENS (must stay after the rules it overrides) */
 
 @media (max-width: 700px) {
   .sidebar {
@@ -410,8 +612,10 @@ button {
 
   .chat-panel {
     left: 15px;
+    right: 15px;
     bottom: 15px;
-    width: calc(100% - 30px);
+    width: 320px;
+  height: 440px;
   }
 
   .map-viewport {
